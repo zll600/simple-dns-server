@@ -1,9 +1,9 @@
-use crate::types::Result;
+use crate::byte_packet_buffer::BytePacketBuffer;
 use crate::dns_header::DnsHeader;
 use crate::dns_question::DnsQuestion;
 use crate::dns_record::DnsRecord;
-use crate::byte_packet_buffer::BytePacketBuffer;
 use crate::query_type::QueryType;
+use crate::types::Result;
 
 #[derive(Clone, Debug)]
 pub struct DnsPacket {
@@ -49,5 +49,29 @@ impl DnsPacket {
         }
 
         Ok(result)
+    }
+
+    pub fn write(&mut self, buffer: &mut BytePacketBuffer) -> Result<()> {
+        self.header.questions = self.questions.len() as u16;
+        self.header.answers = self.answers.len() as u16;
+        self.header.authoritative_entries = self.authorities.len() as u16;
+        self.header.resource_entries = self.resources.len() as u16;
+
+        self.header.write(buffer)?;
+
+        for question in &self.questions {
+            question.write(buffer)?;
+        }
+        for rec in &self.answers {
+            rec.write(buffer)?;
+        }
+        for rec in &self.authorities {
+            rec.write(buffer)?;
+        }
+        for rec in &self.resources {
+            rec.write(buffer)?;
+        }
+
+        Ok(())
     }
 }
