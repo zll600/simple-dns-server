@@ -17,8 +17,8 @@ pub mod types;
 
 fn main() -> Result<()> {
     // Perform an A query for google.com
-    let qname = "google.com";
-    let qtype = QueryType::A;
+    let qname = "www.yahoo.com";
+    let qtype = QueryType::MX;
 
     // Using googles public DNS server
     let server = ("8.8.8.8", 53);
