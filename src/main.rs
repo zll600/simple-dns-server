@@ -31,8 +31,6 @@ fn main() -> Result<()> {
 }
 
 fn lookup(qname: &str, qtype: QueryType, server: (Ipv4Addr, u16)) -> Result<DnsPacket> {
-    // Forward queries to Google's public DNS
-
     let socket = UdpSocket::bind(("0.0.0.0", 43210))?;
 
     let mut packet = DnsPacket::new();
@@ -169,7 +167,7 @@ fn recursive_lookup(qname: &str, qtype: QueryType) -> Result<DnsPacket> {
         // Here we go down the rabbit hole by starting _another_ lookup sequence in the
         // midst of our current one. Hopefully, this will give us the IP of an appropriate
         // name server.
-        let recursive_response = recursive_lookup(&new_ns_name, QueryType::A)?;
+        let recursive_response = recursive_lookup(new_ns_name, QueryType::A)?;
 
         // Finally, we pick a random ip from the result, and restart the loop. If no such
         // record is available, we again return the last result we got.
