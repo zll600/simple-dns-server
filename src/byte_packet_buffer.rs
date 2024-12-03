@@ -58,7 +58,7 @@ impl BytePacketBuffer {
         if start + len >= 512 {
             return Err("End of buffer".into());
         }
-        Ok(&self.buf[start..start + len as usize])
+        Ok(&self.buf[start..start + len])
     }
 
     /// Read two bytes, stepping two steps forward
